@@ -3,6 +3,7 @@ package event
 import (
 	"encoding/json"
 	"order/common/event"
+	"order/common/infra/factory"
 
 	"github.com/streadway/amqp"
 )
@@ -33,7 +34,12 @@ func (e *EventBus) Publish(events ...event.Event) error {
 		return err
 	}
 	for _, event := range events {
-		eventPayload, err := json.Marshal(event)
+		wrappedEvent, err := json.Marshal(
+			EventEnvelope{
+				ID:      event.GetName(),
+				Payload: event,
+			},
+		)
 		if err != nil {
 			return nil
 		}
@@ -44,7 +50,7 @@ func (e *EventBus) Publish(events ...event.Event) error {
 			false,
 			amqp.Publishing{
 				ContentType: "enconding/json",
-				Body:        eventPayload,
+				Body:        wrappedEvent,
 			},
 		)
 		if err != nil {
@@ -90,9 +96,9 @@ func (e *EventBus) Subscribe(eventName string, evt event.EventHandler) error {
 	}
 	go func() {
 		for msg := range msgs {
-			var e event.Event
-			if err := json.Unmarshal(msg.Body, &e); err == nil {
-				evt.Handle(e)
+			targetEvent := factory.GetEvent(eventName)
+			if err := json.Unmarshal(msg.Body, &targetEvent); err == nil {
+				evt.Handle(targetEvent())
 			}
 		}
 	}()
