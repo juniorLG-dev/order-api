@@ -2,8 +2,8 @@ package event
 
 import (
 	"encoding/json"
-	"order/common/event"
-	"order/common/infra/factory"
+	"order/event"
+	"order/infra/factory"
 
 	"github.com/streadway/amqp"
 )

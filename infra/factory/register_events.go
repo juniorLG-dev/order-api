@@ -2,7 +2,7 @@ package factory
 
 import (
 	"errors"
-	"order/common/event"
+	"order/event"
 )
 
 var registerEvents = make(map[string]func() event.Event)

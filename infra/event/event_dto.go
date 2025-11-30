@@ -1,6 +1,6 @@
 package event
 
-import "order/common/event"
+import "order/event"
 
 type EventEnvelope struct {
 	ID      string
