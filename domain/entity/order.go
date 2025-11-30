@@ -1,6 +1,10 @@
 package entity
 
-import "order/domain/vo"
+import (
+	"order/domain/events"
+	"order/domain/vo"
+	"order/event"
+)
 
 type Order struct {
 	ID            string
@@ -35,4 +39,25 @@ func NewOrder(
 		Location:      location,
 		ProductID:     productID,
 	}, nil
+}
+
+func ReplayOrder(events []event.Event) Order {
+	o := Order{}
+	for _, event := range events {
+		o.apply(event)
+	}
+	return o
+}
+
+func (o *Order) apply(e event.Event) {
+	switch evt := e.(type) {
+	case events.OrderPlaced:
+		o.ID = evt.ID
+		o.Name = evt.Name
+		o.Quantity = evt.Quantity
+		o.Price = evt.Price
+		o.PaymentMethod = evt.PaymentMethod
+		o.Location = evt.Location
+		o.ProductID = evt.ProductID
+	}
 }
