@@ -4,16 +4,18 @@ import (
 	"order/domain/events"
 	"order/domain/vo"
 	"order/event"
+	"time"
 )
 
 type Order struct {
-	ID            string
-	Name          string
-	Quantity      vo.Quantity
-	Price         float64
-	PaymentMethod vo.Payment
-	Location      vo.Location
-	ProductID     string
+	ID              string
+	Name            string
+	Quantity        vo.Quantity
+	Price           float64
+	PaymentMethod   vo.Payment
+	Location        vo.Location
+	ProductID       string
+	DateInformation vo.Date
 }
 
 func NewOrder(
@@ -38,6 +40,9 @@ func NewOrder(
 		PaymentMethod: *paymentMethod,
 		Location:      location,
 		ProductID:     productID,
+		DateInformation: vo.Date{
+			CreatedAt: time.Now().String(),
+		},
 	}, nil
 }
 
