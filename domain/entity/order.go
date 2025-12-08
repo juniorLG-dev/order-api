@@ -8,6 +8,8 @@ import (
 )
 
 type Order struct {
+	AggregateRoot
+
 	ID              string
 	Name            string
 	Quantity        vo.Quantity
@@ -32,7 +34,7 @@ func NewOrder(
 	if err != nil {
 		return nil, err
 	}
-	return &Order{
+	order := Order{
 		ID:            id,
 		Name:          name,
 		Quantity:      *quantity,
@@ -43,7 +45,20 @@ func NewOrder(
 		DateInformation: vo.Date{
 			CreatedAt: time.Now().String(),
 		},
-	}, nil
+	}
+
+	order.RecordEvent(
+		events.OrderPlaced{
+			ID:            order.ID,
+			Name:          order.Name,
+			Quantity:      order.Quantity,
+			Price:         order.Price,
+			PaymentMethod: order.PaymentMethod,
+			Location:      order.Location,
+			ProductID:     order.ProductID,
+		},
+	)
+	return &order, nil
 }
 
 func ReplayOrder(events []event.Event) Order {
