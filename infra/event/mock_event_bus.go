@@ -10,7 +10,7 @@ type EventBusMocked struct {
 	events []event.Event
 }
 
-func NewEventBusMocked() event.EventBus {
+func NewEventBusMocked() *EventBusMocked {
 	return &EventBusMocked{
 		events: make([]event.Event, 0),
 	}

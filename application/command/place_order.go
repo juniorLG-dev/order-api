@@ -1,24 +1,20 @@
 package command
 
 import (
-	"order/application/repository"
 	"order/domain/entity"
 	"order/domain/vo"
 	"order/event"
 )
 
 type PlaceOrder struct {
-	orderRepository repository.OrderRepository
-	eventBus        event.EventBus
+	eventBus event.EventBus
 }
 
 func NewPlaceOrder(
-	orderRepository repository.OrderRepository,
 	eventBus event.EventBus,
 ) *PlaceOrder {
 	return &PlaceOrder{
-		orderRepository: orderRepository,
-		eventBus:        eventBus,
+		eventBus: eventBus,
 	}
 }
 
