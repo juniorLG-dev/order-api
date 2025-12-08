@@ -21,6 +21,7 @@ func NewPlaceOrder(
 func (p *PlaceOrder) Run(input PlaceOrderInput) error {
 	order, err := entity.NewOrder(
 		input.ID,
+		input.Email,
 		input.Name,
 		input.PaymentMethod,
 		input.ProductID,
@@ -37,6 +38,7 @@ func (p *PlaceOrder) Run(input PlaceOrderInput) error {
 
 type PlaceOrderInput struct {
 	ID            string
+	Email         string      `json:"email"`
 	Name          string      `json:"name"`
 	Quantity      int         `json:"quantity"`
 	Price         float64     `json:"price"`

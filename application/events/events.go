@@ -6,7 +6,7 @@ import (
 	"order/infra/factory"
 )
 
-type OrderPlaced struct {
+type EmailSent struct {
 	ID            string
 	Email         string
 	Name          string
@@ -17,12 +17,12 @@ type OrderPlaced struct {
 	ProductID     string
 }
 
-func (OrderPlaced) GetName() string {
-	return "OrderPlaced"
+func (EmailSent) GetName() string {
+	return "EmailSent"
 }
 
 func init() {
-	factory.RegisterEvent(OrderPlaced{}.GetName(), func() event.Event {
-		return &OrderPlaced{}
+	factory.RegisterEvent(EmailSent{}.GetName(), func() event.Event {
+		return &EmailSent{}
 	})
 }

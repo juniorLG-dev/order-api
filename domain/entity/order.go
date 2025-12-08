@@ -11,6 +11,7 @@ type Order struct {
 	AggregateRoot
 
 	ID              string
+	Email           string
 	Name            string
 	Quantity        vo.Quantity
 	Price           float64
@@ -21,7 +22,7 @@ type Order struct {
 }
 
 func NewOrder(
-	id, name, paymentMethodValue, productID string,
+	id, email, name, paymentMethodValue, productID string,
 	quantityValue int,
 	price float64,
 	location vo.Location,
@@ -36,6 +37,7 @@ func NewOrder(
 	}
 	order := Order{
 		ID:            id,
+		Email:         email,
 		Name:          name,
 		Quantity:      *quantity,
 		Price:         price,
@@ -73,6 +75,7 @@ func (o *Order) apply(e event.Event) {
 	switch evt := e.(type) {
 	case events.OrderPlaced:
 		o.ID = evt.ID
+		o.Email = evt.Email
 		o.Name = evt.Name
 		o.Quantity = evt.Quantity
 		o.Price = evt.Price

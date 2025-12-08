@@ -1,8 +1,6 @@
 package smtp
 
 import (
-	"fmt"
-
 	gomail "gopkg.in/gomail.v2"
 )
 
@@ -25,7 +23,7 @@ func (o *OrderSMTP) SendEmail(
 	m.SetHeader("From", o.ServerEmail)
 	m.SetHeader("To", recipient)
 	m.SetHeader("Subject", subject)
-	m.SetBody("text/html", fmt.Sprintf("<h1>%s<h1>", message))
+	m.SetBody("text/html", message)
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, o.ServerEmail, o.Key)
 	return d.DialAndSend(m)

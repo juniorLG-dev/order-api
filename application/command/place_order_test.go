@@ -14,6 +14,7 @@ func TestPlaceOrder(t *testing.T) {
 	c := command.NewPlaceOrder(eventBus)
 	c.Run(command.PlaceOrderInput{
 		ID:            "id-123",
+		Email:         "email@example.com",
 		Name:          "test",
 		Quantity:      1,
 		Price:         100,
