@@ -1,6 +1,7 @@
 package entity
 
 import (
+	appEvents "order/application/events"
 	"order/domain/events"
 	"order/domain/vo"
 	"order/event"
@@ -74,6 +75,16 @@ func ReplayOrder(events []event.Event) Order {
 func (o *Order) apply(e event.Event) {
 	switch evt := e.(type) {
 	case events.OrderPlaced:
+		o.ID = evt.ID
+		o.Email = evt.Email
+		o.Name = evt.Name
+		o.Quantity = evt.Quantity
+		o.Price = evt.Price
+		o.PaymentMethod = evt.PaymentMethod
+		o.Location = evt.Location
+		o.ProductID = evt.ProductID
+
+	case appEvents.EmailSent:
 		o.ID = evt.ID
 		o.Email = evt.Email
 		o.Name = evt.Name
