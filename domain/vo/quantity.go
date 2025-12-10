@@ -7,7 +7,7 @@ type Quantity struct {
 }
 
 func NewQuantity(value int) (*Quantity, error) {
-	if value < 1 || value > 10000 {
+	if value < 0 || value > 10000 {
 		return nil, errors.New("invalid quantity of products")
 	}
 	return &Quantity{

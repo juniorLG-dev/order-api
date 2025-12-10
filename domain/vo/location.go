@@ -1,9 +1,9 @@
 package vo
 
 type Location struct {
-	Country    string
-	State      string
-	City       string
-	Complement string
-	CEP        CEP
+	Country    string `json:"country"`
+	State      string `json:"state"`
+	City       string `json:"city"`
+	Complement string `json:"complement"`
+	CEP        CEP    `json:"cep"`
 }

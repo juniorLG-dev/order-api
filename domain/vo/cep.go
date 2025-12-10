@@ -6,7 +6,7 @@ import (
 )
 
 type CEP struct {
-	Value string
+	Value string `json:"code"`
 }
 
 func NewCEP(cep string) (*CEP, error) {

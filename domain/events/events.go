@@ -15,6 +15,7 @@ type OrderPlaced struct {
 	PaymentMethod vo.Payment
 	Location      vo.Location
 	ProductID     string
+	CreatedAt     string
 }
 
 func (OrderPlaced) GetName() string {

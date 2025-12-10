@@ -13,16 +13,9 @@ type EventBus struct {
 	name    string
 }
 
-func NewEventBus(channel *amqp.Channel, name string) *EventBus {
-	return &EventBus{
-		channel: channel,
-		name:    name,
-	}
-}
-
-func (e *EventBus) Publish(events ...event.Event) error {
-	err := e.channel.ExchangeDeclare(
-		e.name,
+func NewEventBus(channel *amqp.Channel, name string) (*EventBus, error) {
+	err := channel.ExchangeDeclare(
+		name,
 		"direct",
 		true,
 		false,
@@ -31,17 +24,25 @@ func (e *EventBus) Publish(events ...event.Event) error {
 		nil,
 	)
 	if err != nil {
-		return err
+		return nil, err
 	}
+	return &EventBus{
+		channel: channel,
+		name:    name,
+	}, nil
+}
+
+func (e *EventBus) Publish(events ...event.Event) error {
 	for _, event := range events {
+		eventJSON, _ := json.Marshal(event)
 		wrappedEvent, err := json.Marshal(
 			EventEnvelope{
 				ID:      event.GetName(),
-				Payload: event,
+				Payload: eventJSON,
 			},
 		)
 		if err != nil {
-			return nil
+			return err
 		}
 		err = e.channel.Publish(
 			e.name,
@@ -84,7 +85,7 @@ func (e *EventBus) Subscribe(eventName string, evt event.EventHandler) error {
 	}
 	msgs, err := e.channel.Consume(
 		q.Name,
-		"order",
+		q.Name,
 		true,
 		false,
 		false,
@@ -96,9 +97,12 @@ func (e *EventBus) Subscribe(eventName string, evt event.EventHandler) error {
 	}
 	go func() {
 		for msg := range msgs {
+			var envelope EventEnvelope
+			json.Unmarshal(msg.Body, &envelope)
 			targetEvent := factory.GetEvent(eventName)
-			if err := json.Unmarshal(msg.Body, &targetEvent); err == nil {
-				evt.Handle(targetEvent())
+			event := targetEvent()
+			if err := json.Unmarshal(envelope.Payload, event); err == nil {
+				evt.Handle(event)
 			}
 		}
 	}()

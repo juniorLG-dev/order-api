@@ -53,6 +53,7 @@ func NewOrder(
 	order.RecordEvent(
 		events.OrderPlaced{
 			ID:            order.ID,
+			Email:         order.Email,
 			Name:          order.Name,
 			Quantity:      order.Quantity,
 			Price:         order.Price,
@@ -74,7 +75,7 @@ func ReplayOrder(events []event.Event) Order {
 
 func (o *Order) apply(e event.Event) {
 	switch evt := e.(type) {
-	case events.OrderPlaced:
+	case *events.OrderPlaced:
 		o.ID = evt.ID
 		o.Email = evt.Email
 		o.Name = evt.Name
@@ -83,8 +84,9 @@ func (o *Order) apply(e event.Event) {
 		o.PaymentMethod = evt.PaymentMethod
 		o.Location = evt.Location
 		o.ProductID = evt.ProductID
+		o.DateInformation.CreatedAt = evt.CreatedAt
 
-	case appEvents.EmailSent:
+	case *appEvents.EmailSent:
 		o.ID = evt.ID
 		o.Email = evt.Email
 		o.Name = evt.Name
