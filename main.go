@@ -5,6 +5,7 @@ import (
 	"log"
 	"order/application/command"
 	eventhandler "order/application/event_handler"
+	"order/application/query"
 	"order/infra/event"
 	"order/infra/repository"
 	"order/infra/smtp"
@@ -47,6 +48,7 @@ func main() {
 	repository := repository.NewSQLRepository(db)
 
 	placeOrder := command.NewPlaceOrder(eventBus)
+	getOrderByID := query.NewGetOrderByID(db)
 
 	sendEmail := eventhandler.NewSendEmail(smtp, eventBus)
 	saveOrder := eventhandler.NewSaveOrder(repository)
@@ -56,6 +58,7 @@ func main() {
 
 	controller := web.NewOrderController(
 		*placeOrder,
+		*getOrderByID,
 	)
 	web.InitRoutes(&r.RouterGroup, controller)
 	r.Run(":8080")

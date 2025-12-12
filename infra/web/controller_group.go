@@ -4,4 +4,5 @@ import "github.com/gin-gonic/gin"
 
 type ControllerGroup interface {
 	PlaceOrder(ctx *gin.Context)
+	GetOrderByID(ctx *gin.Context)
 }
