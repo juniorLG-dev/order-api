@@ -35,7 +35,11 @@ func (c *OrderController) PlaceOrder(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	ctx.JSON(http.StatusAccepted, gin.H{"message": "your order is being processed"})
+	ctx.JSON(http.StatusAccepted, gin.H{
+		"message": "your order is being processed",
+		"id":      input.ID,
+	},
+	)
 }
 
 func (c *OrderController) GetOrderByID(ctx *gin.Context) {
