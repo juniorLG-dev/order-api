@@ -20,8 +20,8 @@ Crie um arquivo `.env` (ou declare as variáveis diretamente no seu terminal) co
 
 | Variável | Descrição | Exemplo |
 | :--- | :--- | :--- |
-| **`EMAIL`** | Seu endereço de e-mail para autenticação ou serviço. | `john@doe.com` |
-| **`KEY`** | Sua chave de API ou token secreto. | `john123` |
+| **`EMAIL`** | Seu endereço de email para o serviço. | `john@doe.com` |
+| **`KEY`** | Sua chave secreta. | `john123` |
 
 **Exemplo de declaração no terminal (Linux/macOS):**
 
