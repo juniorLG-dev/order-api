@@ -60,6 +60,7 @@ func NewOrder(
 			PaymentMethod: order.PaymentMethod,
 			Location:      order.Location,
 			ProductID:     order.ProductID,
+			CreatedAt:     order.DateInformation.CreatedAt,
 		},
 	)
 	return &order, nil
