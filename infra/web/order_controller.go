@@ -1,11 +1,12 @@
 package web
 
 import (
+	"encoding/json"
 	"net/http"
 	"order/application/command"
 	"order/application/query"
+	httpserver "order/infra/http_server"
 
-	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
@@ -24,30 +25,27 @@ func NewOrderController(
 	}
 }
 
-func (c *OrderController) PlaceOrder(ctx *gin.Context) {
+func (c *OrderController) PlaceOrder(req httpserver.HttpRequest) httpserver.HttpResponse {
 	var input command.PlaceOrderInput
-	if err := ctx.ShouldBindJSON(&input); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "invalid json"})
-		return
+	if err := json.Unmarshal(req.Body, &input); err != nil {
+		return httpserver.JSON(http.StatusBadRequest, map[string]string{"error": "invalid json"})
 	}
 	input.ID = uuid.NewString()
 	if err := c.placeOrder.Run(input); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		return httpserver.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
-	ctx.JSON(http.StatusAccepted, gin.H{
+	return httpserver.JSON(http.StatusAccepted, map[string]string{
 		"message": "your order is being processed",
 		"id":      input.ID,
 	},
 	)
 }
 
-func (c *OrderController) GetOrderByID(ctx *gin.Context) {
-	id := ctx.Param("id")
+func (c *OrderController) GetOrderByID(req httpserver.HttpRequest) httpserver.HttpResponse {
+	id := req.Params["id"]
 	order, err := c.getOrderByID.Run(id)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		return httpserver.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
 	}
-	ctx.JSON(http.StatusFound, order)
+	return httpserver.JSON(http.StatusFound, order)
 }

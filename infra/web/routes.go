@@ -1,8 +1,10 @@
 package web
 
-import "github.com/gin-gonic/gin"
+import (
+	httpserver "order/infra/http_server"
+)
 
-func InitRoutes(rg *gin.RouterGroup, c ControllerGroup) {
-	rg.POST("/order", c.PlaceOrder)
-	rg.GET("/order/:id", c.GetOrderByID)
+func InitRoutes(server httpserver.HttpServer, c ControllerGroup) {
+	server.RegisterRoute("POST", "/order", c.PlaceOrder)
+	server.RegisterRoute("GET", "/order/:id", c.GetOrderByID)
 }

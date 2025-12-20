@@ -1,8 +1,10 @@
 package web
 
-import "github.com/gin-gonic/gin"
+import (
+	httpserver "order/infra/http_server"
+)
 
 type ControllerGroup interface {
-	PlaceOrder(ctx *gin.Context)
-	GetOrderByID(ctx *gin.Context)
+	PlaceOrder(httpserver.HttpRequest) httpserver.HttpResponse
+	GetOrderByID(httpserver.HttpRequest) httpserver.HttpResponse
 }
