@@ -6,13 +6,13 @@ import (
 	"order/application/command"
 	eventhandler "order/application/event_handler"
 	"order/application/query"
+	"order/infra/adapter"
 	"order/infra/event"
 	"order/infra/repository"
 	"order/infra/smtp"
 	"order/infra/web"
 	"os"
 
-	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/streadway/amqp"
 )
@@ -38,7 +38,7 @@ func main() {
 		os.Getenv("EMAIL"),
 		os.Getenv("KEY"),
 	)
-	r := gin.Default()
+	server := adapter.NewGinAdapter()
 
 	eventBus, err := event.NewEventBus(channel, "events")
 	if err != nil {
@@ -60,6 +60,6 @@ func main() {
 		*placeOrder,
 		*getOrderByID,
 	)
-	web.InitRoutes(&r.RouterGroup, controller)
-	r.Run(":8080")
+	web.InitRoutes(server, controller)
+	server.Start(":8080")
 }
